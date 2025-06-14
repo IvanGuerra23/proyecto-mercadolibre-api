@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MercadoLibre OAuth - Callback</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .success {
+            color: #28a745;
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .code-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+        .copy-btn {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .copy-btn:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Autorización Exitosa - MercadoLibre</h1>
+        <div class="success">
+            ✅ La autorización con MercadoLibre se completó correctamente.
+        </div>
+        
+        <div id="code-section" style="display: none;">
+            <h3>Código de Autorización Recibido:</h3>
+            <div class="code-box" id="auth-code"></div>
+            <button class="copy-btn" onclick="copyCode()">📋 Copiar Código</button>
+            <p><strong>Instrucciones:</strong></p>
+            <ol>
+                <li>Copia el código de arriba</li>
+                <li>Regresa a tu Google Colab</li>
+                <li>Pega el código donde se solicite</li>
+                <li>Continúa con el proceso de autenticación</li>
+            </ol>
+        </div>
+
+        <div id="no-code-section">
+            <p>Esta página está lista para recibir el código de autorización de MercadoLibre.</p>
+            <p><strong>URL de esta página:</strong></p>
+            <div class="code-box" id="current-url"></div>
+            <button class="copy-btn" onclick="copyUrl()">📋 Copiar URL</button>
+            <p>Usa esta URL como "Redirect URI" en la configuración de tu aplicación en MercadoLibre.</p>
+        </div>
+    </div>
+
+    <script>
+        // Obtener parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        const error = urlParams.get('error');
+        
+        // Mostrar URL actual
+        document.getElementById('current-url').textContent = window.location.origin + window.location.pathname;
+        
+        if (code) {
+            // Si hay código, mostrarlo
+            document.getElementById('code-section').style.display = 'block';
+            document.getElementById('no-code-section').style.display = 'none';
+            document.getElementById('auth-code').textContent = code;
+        } else if (error) {
+            // Si hay error, mostrarlo
+            document.querySelector('.success').innerHTML = '❌ Error en la autorización: ' + error;
+            document.querySelector('.success').className = 'error';
+        }
+        
+        function copyCode() {
+            const code = document.getElementById('auth-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('¡Código copiado al portapapeles!');
+            });
+        }
+        
+        function copyUrl() {
+            const url = document.getElementById('current-url').textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('¡URL copiada al portapapeles!');
+            });
+        }
+    </script>
+</body>
+</html>
